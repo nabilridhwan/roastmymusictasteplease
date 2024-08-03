@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import {Archivo, Inter, Josefin_Sans, Playfair_Display, Plus_Jakarta_Sans, Red_Hat_Display} from "next/font/google";
+import {Inter} from "next/font/google";
 import "./globals.css";
 import {Providers} from "@/app/providers";
 
