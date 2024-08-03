@@ -21,7 +21,7 @@ export default function Home() {
 
     const handleLoginWithSpotify = () => {
         const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID!;
-        const redirect_uri = `${window.location.origin}/roast`;
+        const redirect_uri = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI!;
 
         const state = generateRandomString(16);
 
