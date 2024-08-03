@@ -7,7 +7,8 @@ import CustomLoader from "@/components/CustomLoader";
 const STATE_KEY = 'spotify_auth_state';
 
 /**
- * Converts the hash into an object
+ * Converts the hash in the URL into an object
+ * Used for decoding the Spotify access token from implicit grant flow
  * @param hash
  */
 function parseHash(hash: string) {
@@ -60,6 +61,18 @@ export default function RoastPage() {
                 <div>
                     <p>
                         There was an error with the Spotify authentication. Please try again.
+                    </p>
+                </div>
+            </Container>
+        )
+    }
+
+    if (!accessToken) {
+        return (
+            <Container>
+                <div>
+                    <p>
+                        Seems like even Spotify failed to authenticate you... Are you sure you're not a bot?
                     </p>
                 </div>
             </Container>
