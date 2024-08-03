@@ -72,7 +72,7 @@ export default function RoastPage() {
             <Container>
                 <div>
                     <p>
-                        Seems like even Spotify failed to authenticate you... Are you sure you're not a bot?
+                        Seems like even Spotify failed to authenticate you... Are you sure you&apos;re not a bot?
                     </p>
                 </div>
             </Container>
