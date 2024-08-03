@@ -143,7 +143,7 @@ export default function Roast() {
         return (
             <Container>
                 <Stack alignItems={'center'} textAlign={'center'} my={40} spacing={8}>
-                    <RingLoader color={'white'} size={80}/>
+                    <RingLoader size={80}/>
                     <p>
                         Hold on, we&apos;re roasting your music taste... We&apos;re trying hard to make this one hurt.
                     </p>
