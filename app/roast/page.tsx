@@ -6,6 +6,7 @@ import {SAMPLE_DATA} from "@/sample-data";
 import html2canvas from "html2canvas";
 import Roast from "@/components/Roast";
 import {format} from "date-fns";
+import {RingLoader} from "react-spinners";
 
 const STATE_KEY = 'spotify_auth_state';
 
@@ -134,25 +135,27 @@ export default function RoastPage() {
 
     if (hasSpotifyAuthError) {
         return (
-            <Container>
-                <div>
-                    <p>
-                        There was an error with the Spotify authentication. Please try again.
+            <div className={'container my-8 mx-auto'}>
+                <div className={'px-8 text-white flex flex-col items-center text-center my-40 gap-8'}>
+                    <p className={'text-white'}>
+                        The gods of music have rejected your offering. You have failed to authenticate with Spotify. <a
+                        href={"/"} className={'underline'}>Try again</a>
                     </p>
                 </div>
-            </Container>
+            </div>
         )
     }
 
     if (!accessToken) {
         return (
-            <Container>
-                <div>
-                    <p>
-                        Seems like even Spotify failed to authenticate you... Are you sure you&apos;re not a bot?
+            <div className={'container my-8 mx-auto'}>
+                <div className={'px-8 text-white flex flex-col items-center text-center my-40 gap-8'}>
+                    <p className={'text-white'}>
+                        The gods of music have rejected your offering. You have failed to authenticate with Spotify. <a
+                        href={"/"} className={'underline'}>Try again</a>
                     </p>
                 </div>
-            </Container>
+            </div>
         )
     }
 
