@@ -190,8 +190,11 @@ export default function RoastPage() {
 
     return (
         <div className={'container my-8 mx-auto'}>
-            <Suspense fallback={<CustomLoader
-                text={"Hold on, the Gods of Music are reviewing other applications by masochistic people like you! They're trying hard to make sure this one hurts."}/>}>
+            <Suspense fallback={
+                <CustomLoader
+                    text={"Hold on, the Gods of Music are reviewing other applications by masochistic people like you! They're trying hard to make sure this one hurts."}
+                />
+            }>
 
                 <div className={'flex flex-col items-center text-white my-8 gap-7 mx-2'}>
 
