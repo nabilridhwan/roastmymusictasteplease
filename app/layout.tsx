@@ -7,7 +7,33 @@ const inconsolata = Inconsolata({subsets: ["latin"]});
 
 export const metadata: Metadata = {
     title: "Roast my music taste, please!",
-    description: "Because Every Music Taste Deserves a Good Burn!",
+    description: "Think you got superior music taste? Let the gods of music be the judge of it",
+    openGraph: {
+        title: "Roast my music taste, please!",
+        images: [
+            {
+                url: "https://roastmymusictasteplease.vercel.app/og-image.png",
+                width: 1200,
+                height: 630,
+                alt: "Roast my music taste, please!"
+            }
+        ],
+        type: "website",
+        url: "https://roastmymusictasteplease.vercel.app"
+    },
+    twitter: {
+        images: [
+            {
+                url: "https://roastmymusictasteplease.vercel.app/og-image.png",
+                alt: "Roast my music taste, please!",
+                width: 1200,
+                height: 630
+            }
+        ],
+        title: "Roast my music taste, please!",
+        card: "summary_large_image",
+        description: "Think you got superior music taste? Let the gods of music be the judge of it"
+    }
 };
 
 export default function RootLayout({children}: Readonly<{

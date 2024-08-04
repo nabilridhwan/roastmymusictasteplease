@@ -46,7 +46,7 @@ export default function Home() {
         <div className={'my-14'}>
             <Receipt.Scaffold>
                 <p className={'mt-4'}>
-                    Think you got superior musical taste? Let AI be the judge of it.
+                    Think you got superior musical taste? Let the gods of music be the judge of it.
                 </p>
 
                 <Receipt.Spacer/>
