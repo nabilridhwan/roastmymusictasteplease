@@ -1,7 +1,7 @@
 import {Libre_Barcode_39} from "next/font/google";
 
 
-const DEFAULT_DIVIDER_LENGTH = 38;
+const DEFAULT_DIVIDER_LENGTH = 34;
 
 const barcodeFont = Libre_Barcode_39({
     subsets: ['latin'],
@@ -48,13 +48,13 @@ const Divider = ({text = ""}: { text?: string }) => {
 }
 
 const Barcode = ({text}: { text: string }) => {
-    return <p style={barcodeFont.style} className={'text-6xl'}>
+    return <p style={barcodeFont.style} className={'text-5xl'}>
         {text}
     </p>
 }
 
 const LeftItems = ({items}: { items: { label: string, value: any }[] }) => {
-    return <p className={'text-left'}>
+    return <p className={'text-left uppercase'}>
         {items.map((item, index) => {
             return <span key={index}>
                 {item.label}: {item.value}

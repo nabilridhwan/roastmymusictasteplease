@@ -72,6 +72,41 @@ async function fetchSpotifyTopSongs(accessToken: string): Promise<Song[]> {
     })
 }
 
+/**
+ * Fetch the Spotify profile by user's token
+ * @param accessToken
+ */
+async function fetchSpotifyProfile(accessToken: string) {
+    const res = await fetch('https://api.spotify.com/v1/me', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    })
+
+    const data = await res.json()
+
+    if (!data) {
+        return null
+    }
+
+    return {
+        name: data.display_name,
+    }
+
+}
+
+const PLAYFUL_LINES = [
+    "I hope you get a paper cut on a lottery ticket.",
+    "I hope your favorite song gets stuck in your head forever.",
+    "I hope you accidentally bite into a raisin cookie thinking it's chocolate chip.",
+    "I hope you step on a Lego in the middle of the night.",
+    "I hope your ice cream melts before you finish it.",
+    "I hope you always get a slightly overripe banana.",
+    "I hope you get a small pebble in your shoe on a long walk.",
+    "I hope your favorite show gets cancelled on a cliffhanger.",
+    "I hope you always spill a little bit of your drink when you take the first sip.",
+    "I hope you always get the slowest cashier in the store."
+]
 
 export default function RoastPage() {
 
@@ -79,6 +114,42 @@ export default function RoastPage() {
     const [hasSpotifyAuthError, setHasSpotifyAuthError] = useState(false)
     const [songs, setSongs] = useState<Song[]>([])
     const [isLoadingSongs, setIsLoadingSongs] = useState(true)
+    const [displayName, setDisplayName] = useState("")
+    const [isLoadingUserProfile, setIsLoadingUserProfile] = useState(true)
+
+    const isLoading = isLoadingSongs || isLoadingUserProfile
+
+    // Return 'DAY', 'EVENING', 'NIGHT' based on the current time
+    const getGreeting = () => {
+        const hour = new Date().getHours()
+
+        if (hour >= 0 && hour < 12) {
+            return 'DAY'
+        } else if (hour >= 12 && hour < 18) {
+            return 'EVENING'
+        } else {
+            return 'NIGHT'
+        }
+    }
+
+
+    const handleFetchSpotifyTopSongs = async (accessToken: string) => {
+        fetchSpotifyTopSongs(accessToken).then((songs) => {
+            setSongs(songs);
+        }).finally(() => {
+            setIsLoadingSongs(false)
+        })
+    }
+
+    const handleFetchSpotifyProfile = async (accessToken: string) => {
+        fetchSpotifyProfile(accessToken)
+            .then((user) => {
+                if (!user) return;
+                setDisplayName(user.name)
+            }).finally(() => {
+            setIsLoadingUserProfile(false)
+        })
+    }
 
     /**
      * Bind hash from URL into state
@@ -111,12 +182,8 @@ export default function RoastPage() {
 
         if (!accessToken) return;
 
-        fetchSpotifyTopSongs(accessToken).then((songs) => {
-            setSongs(songs);
-        }).finally(() => {
-            setIsLoadingSongs(false)
-        })
-
+        void handleFetchSpotifyTopSongs(accessToken)
+        void handleFetchSpotifyProfile(accessToken)
     }, [accessToken]);
 
     const handleDownloadImage = async () => {
@@ -131,16 +198,6 @@ export default function RoastPage() {
 
 
         saveAs(data, 'roastmymusictasteplease-result.jpg');
-        // link.download = 'roastmymusictasteplease-result.jpg';
-        //
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
-
-        // domtoimage.toBlob(document.getElementById('print')!)
-        //     .then(async function (blob) {
-        //         saveAs(blob, 'roastmymusictasteplease-result.jpg');
-        //     });
     };
 
     if (hasSpotifyAuthError) {
@@ -169,7 +226,7 @@ export default function RoastPage() {
         )
     }
 
-    if (isLoadingSongs) {
+    if (isLoading) {
         return <CustomLoader text={"Hold on! We're making this worthwhile."}/>
     }
 
@@ -198,87 +255,106 @@ export default function RoastPage() {
 
                 <div className={'flex flex-col items-center text-white my-8 gap-7 mx-2'}>
 
-                    <h1 className={'text-white text-2xl leading-none text-center'}>
+                    <h1 className={'text-white text-2xl leading-none text-center uppercase'}>
+                        {displayName},
+                        <br/>
                         YOU HAVE BEEN SERVED BY
                         <br/>
                         THE GODS OF MUSIC
                     </h1>
 
-                    <button
-                        onClick={handleDownloadImage}
-                        className={'underline'}
-                    >
-                        &gt; SAVE IMAGE (BECAUSE YOU GOTTA SOMEHOW GET VALIDATION FOR YOUR MUSIC, RIGHT?)
-                    </button>
+                    <div className={'text-white flex-col flex items-center gap-4'}>
+                        <button
+                            onClick={handleDownloadImage}
+                            className={'bg-white px-3 py-2 text-black rounded-xl'}
+                        >
+                            SAVE IMAGE
+                        </button>
+                        <p className={'text-white text-xs text-center'}>
+                            (BECAUSE YOU GOTTA SOMEHOW GET VALIDATION FOR YOUR MUSIC, RIGHT?)
+                        </p>
+                    </div>
 
-                    <p className={'text-white text-center text-sm text-opacity-80'}>
-                        IF YOU LIKE THIS STUPID APP (OR MY AWESOME HUMOR), CONSIDER <a
+                    <p className={'text-white text-center text-sm text-opacity-40'}>
+                        IF YOU LIKE THIS STUPID APP (OR MY AWESOME HUMOR),<br/> CONSIDER <a
                         href={'https://ko-fi.com/nabilridhwan'}
                         className={'underline'}>SUPPORTING ME!</a>
                     </p>
                 </div>
 
-                <Receipt.Scaffold>
-                    <p className={'my-3 mb-8'}>ROASTMYMUSICTASTEPLEASE.VERCEL.APP</p>
+                <div className={'mx-3'}>
+                    <Receipt.Scaffold>
+                        <p className={'my-3 mb-8'}>ROASTMYMUSICTASTEPLEASE.VERCEL.APP</p>
 
-                    <Receipt.Spacer/>
+                        <Receipt.Spacer/>
 
-                    <Receipt.LeftItems items={
-                        [
-                            {label: 'CUSTOMER', value: 'PATHETIC HUMAN'},
-                            {label: 'DATE', value: format(new Date(), 'yyyy-MM-dd')},
-                            {label: 'SERVED BY', value: 'THE GODS OF MUSIC'}
-                        ]
-                    }/>
+                        <Receipt.LeftItems items={
+                            [
+                                {label: 'ORDER', value: '#0001'},
+                                {label: 'CUSTOMER', value: displayName || 'PATHETIC HUMAN'},
+                                {label: 'DATE', value: format(new Date(), 'yyyy-MM-dd')},
+                                {label: 'SERVED BY', value: 'THE GODS OF MUSIC'},
+                            ]
+                        }/>
 
-                    <Receipt.Divider/>
+                        <Receipt.Divider/>
 
-                    {songs.map((song, idx) => (
-                        <div key={idx} className={'flex text-left justify-between my-1'}>
-                            <p key={idx} className={'uppercase pr-10'}>
-                                {song.name} – {song.artist}
-                            </p>
+                        {songs.map((song, idx) => (
+                            <div key={idx} className={'flex text-left justify-between my-1'}>
+                                <p key={idx} className={'uppercase pr-10'}>
+                                    {song.name} – {song.artist}
+                                </p>
 
-                            <p>
-                                {millisToMinutesAndSeconds(song.duration_ms)}
-                            </p>
-                        </div>
-                    ))}
+                                <p>
+                                    {millisToMinutesAndSeconds(song.duration_ms)}
+                                </p>
+                            </div>
+                        ))}
 
 
-                    <Receipt.Divider/>
+                        <Receipt.Divider/>
 
-                    <p className={'uppercase'}>
-                        {/*{SAMPLE_DATA.ROAST}*/}
-                        <Roast songs={songs}/>
+                        <p className={'uppercase'}>
+                            {/*{SAMPLE_DATA.ROAST}*/}
+                            <Roast songs={songs}/>
+                        </p>
+
+
+                        <Receipt.Divider/>
+
+                        <Receipt.Barcode text={'MADEBYNABIL'}/>
+                        <p className={'uppercase'}>
+                            HAVE A TERRIBLE {getGreeting()}!
+                            – {PLAYFUL_LINES[Math.floor(Math.random() * PLAYFUL_LINES.length)]}
+                        </p>
+
+                        <p className={'mt-4 text-xs leading-none'}>
+                            GET YOUR OWN ROAST BY VISITING ROASTMYMUSICTASTEPLEASE.VERCEL.APP
+                        </p>
+
+                    </Receipt.Scaffold>
+
+                    <p className={'text-white text-center text-sm text-opacity-80 my-8'}>
+                        IF YOU LIKE THIS STUPID APP (OR MY AWESOME HUMOR), CONSIDER <a
+                        href={'https://ko-fi.com/nabilridhwan'}
+                        className={'underline'}>SUPPORTING ME!</a>
                     </p>
 
 
-                    <Receipt.Divider/>
+                    <div className={'text-white flex-col flex items-center gap-4'}>
+                        <button
+                            onClick={handleDownloadImage}
+                            className={'bg-white px-3 py-2 text-black rounded-xl'}
+                        >
+                            SAVE IMAGE
+                        </button>
+                        <p className={'text-white text-xs text-center'}>
+                            (BECAUSE YOU GOTTA SOMEHOW GET VALIDATION FOR YOUR MUSIC, RIGHT?)
+                        </p>
+                    </div>
 
-                    <Receipt.Barcode text={'MADEBYNABIL'}/>
-                    <p>
-                        HAVE A TERRIBLE DAY!
-                    </p>
 
-                    <p className={'mt-4 text-xs leading-none'}>
-                        GET YOUR OWN ROAST BY VISITING ROASTMYMUSICTASTEPLEASE.VERCEL.APP
-                    </p>
-
-                </Receipt.Scaffold>
-
-                <button
-                    onClick={handleDownloadImage}
-                    className={'underline text-white mt-[36px] my-5'}
-                >
-                    &gt; SAVE IMAGE (BECAUSE YOU GOTTA SOMEHOW GET VALIDATION FOR YOUR MUSIC, RIGHT?)
-                </button>
-
-                <p className={'text-white text-center text-sm text-opacity-80'}>
-                    IF YOU LIKE THIS STUPID APP (OR MY AWESOME HUMOR), CONSIDER <a
-                    href={'https://ko-fi.com/nabilridhwan'}
-                    className={'underline'}>SUPPORTING ME!</a>
-                </p>
+                </div>
 
 
             </Suspense>

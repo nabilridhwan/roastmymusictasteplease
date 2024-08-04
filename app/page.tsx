@@ -24,7 +24,7 @@ const handleLoginWithSpotify = () => {
     const state = generateRandomString(16);
 
     localStorage.setItem(STATE_KEY, state);
-    const scope = 'user-top-read';
+    const scope = 'user-read-private user-read-email user-top-read';
 
     let url = new URL('https://accounts.spotify.com/authorize');
     url.searchParams.set('response_type', 'token');
