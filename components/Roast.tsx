@@ -6,10 +6,11 @@ import {StringOutputParser} from "@langchain/core/output_parsers";
 interface Song {
     name: string;
     artist: string;
+    duration_ms: number;
 }
 
 const model = new ChatOpenAI({model: "gpt-4o-mini"});
-const systemTemplate = "You are a master roaster. You job is to roast the user given some songs they have recently listened to. Take the information of all songs and roast the user only once. If you are not able to deduce a roast, do not roast the user back and return \"Information not available\". In the end, give a score, on a scale of 1 to 100 on how bad the user's music taste is:";
+const systemTemplate = "You are a master roaster. Your job is to roast the user given some songs they have recently listened to. Take the information of all songs and roast the user only once. You won’t be helpful if you can’t deduce a roast or make a roast that isn’t personal. To make the roast more personal, you must use the title of the songs and the artist to your advantage. Try to keep your roast as concise as below 150 words.";
 const promptTemplate = ChatPromptTemplate.fromMessages([
     ["system", systemTemplate],
     ["user", "{songs}"],
@@ -32,7 +33,8 @@ async function fetchSpotifyTopSongs(accessToken: string): Promise<Song[]> {
     return data.items.map((item: any) => {
         return {
             name: item.name,
-            artist: item.artists.map((artist: any) => artist.name).join(", ")
+            artist: item.artists.map((artist: any) => artist.name).join(", "),
+            duration_ms: item.duration_ms
         }
     })
 }
@@ -51,6 +53,9 @@ export async function generateRoast(songsData: Song[]) {
 export default async function Roast({spotifyAccessToken}: { spotifyAccessToken: string }) {
     const songs = await fetchSpotifyTopSongs(spotifyAccessToken)
     const roast = await generateRoast(songs)
+
+    console.log(JSON.stringify(songs))
+    console.log(roast)
 
     if (!songs) {
         return <p>

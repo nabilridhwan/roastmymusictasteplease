@@ -2,3 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    @apply leading-none text-black text-opacity-70;
+}
+
+body {
+    @apply bg-neutral-900;
+}

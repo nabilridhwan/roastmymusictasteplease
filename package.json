@@ -9,13 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chakra-ui/next-js": "^2.2.0",
-    "@chakra-ui/react": "^2.8.2",
-    "@emotion/react": "^11.13.0",
-    "@emotion/styled": "^11.13.0",
     "@langchain/openai": "^0.2.5",
     "axios": "^1.7.3",
-    "framer-motion": "^11.3.21",
+    "date-fns": "^3.6.0",
+    "html2canvas": "^1.4.1",
     "langchain": "^0.2.12",
     "next": "14.2.5",
     "react": "^18",

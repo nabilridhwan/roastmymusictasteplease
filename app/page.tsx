@@ -1,6 +1,7 @@
 'use client';
-import {FaSpotify} from "react-icons/fa";
-import {Button, Container, Stack, Text} from "@chakra-ui/react";
+import {Libre_Barcode_39} from "next/font/google";
+import {Receipt} from "@/components/Receipt";
+import {format} from "date-fns";
 
 const STATE_KEY = 'spotify_auth_state';
 
@@ -39,35 +40,66 @@ const handleLoginWithSpotify = () => {
     window.location.replace(url)
 }
 
+
 export default function Home() {
     return (
-        <Container>
-            <Stack textAlign={'center'} alignItems={'center'} my={48} spacing={4}>
-                <Text fontSize={'4xl'} fontWeight={'bold'}>
-                    Roast my music taste, please!
-                </Text>
-
-                <Text>
+        <div className={'my-14'}>
+            <Receipt.Scaffold>
+                <p className={'mt-4'}>
                     Think you got superior musical taste? Let AI be the judge of it.
-                </Text>
+                </p>
 
-                <Button
-                    mt={8}
-                    colorScheme={'green'}
+                <Receipt.Spacer/>
+
+                <Receipt.LeftItems items={[
+                    {label: 'CUSTOMER', value: 'PATHETIC HUMAN (YOU)'},
+                    {label: 'DATE', value: format(new Date(), 'yyyy-MM-dd')},
+                    {label: 'SERVICE', value: 'THE GODS OF MUSIC'}
+                ]}/>
+
+                <Receipt.Spacer/>
+
+                <Receipt.Divider text={'WARNING'}/>
+
+                <p className={'mt-3'}>
+                    The Gods of Music have no mercy for you. Your music taste is tragic, your love life a
+                    cringe-worthy
+                    ballad, and your personality is that one track everyone skips. When they break the 4th wall,
+                    they
+                    see your deepest flaws. Take this roast with full conscience—you’ll need it.
+                </p>
+
+
+                <Receipt.Spacer/>
+
+                <button
+                    className={'mt-1 text-lg'}
                     onClick={handleLoginWithSpotify}
-                    leftIcon={<FaSpotify/>}
                 >
-                    Log in with Spotify
-                </Button>
+                    &gt; Continue with Spotify
+                </button>
 
 
-                <Text fontSize={'sm'} opacity={0.7} mt={20}>
-                    Made with love by <a href={'https://nabilridhwan.com'} target={'_blank'}>Nabil</a>
-                </Text>
+                <p className={'text-xs mt-4'}>
+                    Are you using the inferior platform, Apple Music or YouTube Music? Let me know if you want it
+                    too!
+                </p>
 
-            </Stack>
 
-        </Container>
+                <Receipt.Divider/>
+
+                <Receipt.Barcode text={'MADEBYNABIL'}/>
+
+                <p className={'text-sm px-8'}>
+                    Made with full hatred (jk, I love you guys) by <a className={'underline'}
+                                                                      href={'https://nabilridhwan.com'}
+                                                                      target={'_blank'}>Nabil</a>
+                </p>
+
+
+            </Receipt.Scaffold>
+
+        </div>
 
     );
 }
