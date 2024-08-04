@@ -12,6 +12,8 @@
     "@langchain/openai": "^0.2.5",
     "axios": "^1.7.3",
     "date-fns": "^3.6.0",
+    "dom-to-image": "^2.6.0",
+    "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "langchain": "^0.2.12",
     "next": "14.2.5",
@@ -21,6 +23,8 @@
     "react-spinners": "^0.14.1"
   },
   "devDependencies": {
+    "@types/dom-to-image": "^2.6.7",
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

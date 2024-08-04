@@ -336,6 +336,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dom-to-image@npm:^2.6.7":
+  version: 2.6.7
+  resolution: "@types/dom-to-image@npm:2.6.7"
+  checksum: aecdd8bb06b23026ea169fd567f66f4dc19843efc9b8fc96464a86c670eaab4b7a58408f8b6aeec42d115c001a2b2a0935b19960d980d8ae84148017f731a68e
+  languageName: node
+  linkType: hard
+
+"@types/file-saver@npm:^2.0.7":
+  version: 2.0.7
+  resolution: "@types/file-saver@npm:2.0.7"
+  checksum: c3d1cd80eab1214767922cabac97681f3fb688e82b74890450d70deaca49537949bbc96d80d363d91e8f0a4752c7164909cc8902d9721c5c4809baafc42a3801
+  languageName: node
+  linkType: hard
+
 "@types/json5@npm:^0.0.29":
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
@@ -1247,6 +1261,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dom-to-image@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "dom-to-image@npm:2.6.0"
+  checksum: 0d1f450b776d36f3ec982783d2a3898baaa3697f135ed0a9c70085db6bc5ac6def02f5ed7affc6acb92ef4fb3248905fabec915fed541994383d317260f784a2
+  languageName: node
+  linkType: hard
+
 "eastasianwidth@npm:^0.2.0":
   version: 0.2.0
   resolution: "eastasianwidth@npm:0.2.0"
@@ -1789,6 +1810,13 @@ __metadata:
   dependencies:
     flat-cache: ^3.0.4
   checksum: f49701feaa6314c8127c3c2f6173cfefff17612f5ed2daaafc6da13b5c91fd43e3b2a58fd0d63f9f94478a501b167615931e7200e31485e320f74a33885a9c74
+  languageName: node
+  linkType: hard
+
+"file-saver@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "file-saver@npm:2.0.5"
+  checksum: c62d96e5cebc58b4bdf3ae8a60d5cf9607ad82f75f798c33a4ee63435ac2203002584d5256a2a780eda7feb5e19dc3b6351c2212e58b3f529e63d265a7cc79f7
   languageName: node
   linkType: hard
 
@@ -4078,13 +4106,17 @@ __metadata:
   resolution: "roast-me-spotify@workspace:."
   dependencies:
     "@langchain/openai": ^0.2.5
+    "@types/dom-to-image": ^2.6.7
+    "@types/file-saver": ^2.0.7
     "@types/node": ^20
     "@types/react": ^18
     "@types/react-dom": ^18
     axios: ^1.7.3
     date-fns: ^3.6.0
+    dom-to-image: ^2.6.0
     eslint: ^8
     eslint-config-next: 14.2.5
+    file-saver: ^2.0.5
     html2canvas: ^1.4.1
     langchain: ^0.2.12
     next: 14.2.5

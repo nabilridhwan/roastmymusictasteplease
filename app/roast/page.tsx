@@ -7,6 +7,8 @@ import html2canvas from "html2canvas";
 import Roast from "@/components/Roast";
 import {format} from "date-fns";
 import {RingLoader} from "react-spinners";
+import domtoimage from 'dom-to-image'
+import {saveAs} from 'file-saver'
 
 const STATE_KEY = 'spotify_auth_state';
 
@@ -126,11 +128,19 @@ export default function RoastPage() {
             link = document.createElement('a');
 
         link.href = data;
-        link.download = 'downloaded-image.jpg';
 
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+
+        saveAs(data, 'roastmymusictasteplease-result.jpg');
+        // link.download = 'roastmymusictasteplease-result.jpg';
+        //
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link);
+
+        // domtoimage.toBlob(document.getElementById('print')!)
+        //     .then(async function (blob) {
+        //         saveAs(blob, 'roastmymusictasteplease-result.jpg');
+        //     });
     };
 
     if (hasSpotifyAuthError) {
@@ -236,8 +246,8 @@ export default function RoastPage() {
                     <Receipt.Divider/>
 
                     <p className={'uppercase'}>
-                        {/*{SAMPLE_DATA.ROAST}*/}
-                        <Roast songs={songs}/>
+                        {SAMPLE_DATA.ROAST}
+                        {/*<Roast songs={songs}/>*/}
                     </p>
 
 
