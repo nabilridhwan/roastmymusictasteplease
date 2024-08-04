@@ -323,8 +323,8 @@ export default function RoastPage() {
                         <Receipt.Divider/>
 
                         <p className={'uppercase'}>
-                            {SAMPLE_DATA.ROAST}
-                            {/*<Roast songs={songs}/>*/}
+                            {/*{SAMPLE_DATA.ROAST}*/}
+                            <Roast songs={songs}/>
                         </p>
 
 
