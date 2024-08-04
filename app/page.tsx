@@ -43,7 +43,7 @@ const handleLoginWithSpotify = () => {
 
 export default function Home() {
     return (
-        <div className={'my-14'}>
+        <div className={'my-14 mx-4'}>
             <Receipt.Scaffold>
                 <p className={'mt-4'}>
                     Think you got superior musical taste? Let the gods of music be the judge of it.
@@ -73,7 +73,7 @@ export default function Home() {
                 <Receipt.Spacer/>
 
                 <button
-                    className={'mt-1 text-lg'}
+                    className={'mt-1 text-lg font-bold animate-pulse'}
                     onClick={handleLoginWithSpotify}
                 >
                     &gt; Continue with Spotify
@@ -91,9 +91,9 @@ export default function Home() {
                 <Receipt.Barcode text={'MADEBYNABIL'}/>
 
                 <p className={'text-sm px-8'}>
-                    Made with full hatred (jk, I love you guys) by <a className={'underline'}
-                                                                      href={'https://nabilridhwan.com'}
-                                                                      target={'_blank'}>Nabil</a>
+                    Made with full hatred by <a className={'underline'}
+                                                href={'https://nabilridhwan.com'}
+                                                target={'_blank'}>Nabil</a>
                 </p>
 
 

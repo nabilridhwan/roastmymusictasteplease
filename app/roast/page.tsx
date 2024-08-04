@@ -111,7 +111,7 @@ const PLAYFUL_LINES = [
 export default function RoastPage() {
 
     const [accessToken, setAccessToken] = useState("")
-    const [hasSpotifyAuthError, setHasSpotifyAuthError] = useState(false)
+    const [hasSpotifyError, setHasSpotifyError] = useState(false)
     const [songs, setSongs] = useState<Song[]>([])
     const [isLoadingSongs, setIsLoadingSongs] = useState(true)
     const [displayName, setDisplayName] = useState("")
@@ -136,9 +136,13 @@ export default function RoastPage() {
     const handleFetchSpotifyTopSongs = async (accessToken: string) => {
         fetchSpotifyTopSongs(accessToken).then((songs) => {
             setSongs(songs);
-        }).finally(() => {
-            setIsLoadingSongs(false)
         })
+            .catch(() => {
+                setHasSpotifyError(true)
+            })
+            .finally(() => {
+                setIsLoadingSongs(false)
+            })
     }
 
     const handleFetchSpotifyProfile = async (accessToken: string) => {
@@ -146,9 +150,13 @@ export default function RoastPage() {
             .then((user) => {
                 if (!user) return;
                 setDisplayName(user.name)
-            }).finally(() => {
-            setIsLoadingUserProfile(false)
-        })
+            })
+            .catch(() => {
+                setHasSpotifyError(true)
+            })
+            .finally(() => {
+                setIsLoadingUserProfile(false)
+            })
     }
 
     /**
@@ -165,12 +173,12 @@ export default function RoastPage() {
         // Check if the state matches
 
         if (hashObject['state'] !== state) {
-            setHasSpotifyAuthError(true)
+            setHasSpotifyError(true)
             return
         }
 
         if (hashObject['error'] !== undefined) {
-            setHasSpotifyAuthError(true)
+            setHasSpotifyError(true)
             return
         }
 
@@ -200,12 +208,12 @@ export default function RoastPage() {
         saveAs(data, 'roastmymusictasteplease-result.jpg');
     };
 
-    if (hasSpotifyAuthError) {
+    if (hasSpotifyError) {
         return (
             <div className={'container my-8 mx-auto'}>
                 <div className={'px-8 text-white flex flex-col items-center text-center my-40 gap-8'}>
                     <p className={'text-white'}>
-                        The gods of music have rejected your offering. You have failed to authenticate with Spotify. <a
+                        The gods of music have rejected your offering. <a
                         href={"/"} className={'underline'}>Try again</a>
                     </p>
                 </div>
@@ -275,7 +283,7 @@ export default function RoastPage() {
                         </p>
                     </div>
 
-                    <p className={'text-white text-center text-sm text-opacity-40'}>
+                    <p className={'text-white text-center text-sm text-opacity-60'}>
                         IF YOU LIKE THIS STUPID APP (OR MY AWESOME HUMOR),<br/> CONSIDER <a
                         href={'https://ko-fi.com/nabilridhwan'}
                         className={'underline'}>SUPPORTING ME!</a>
@@ -290,7 +298,7 @@ export default function RoastPage() {
 
                         <Receipt.LeftItems items={
                             [
-                                {label: 'ORDER', value: '#0001'},
+                                {label: 'ORDER', value: `#${new Date().getTime()}-0001`},
                                 {label: 'CUSTOMER', value: displayName || 'PATHETIC HUMAN'},
                                 {label: 'DATE', value: format(new Date(), 'yyyy-MM-dd')},
                                 {label: 'SERVED BY', value: 'THE GODS OF MUSIC'},
@@ -315,8 +323,8 @@ export default function RoastPage() {
                         <Receipt.Divider/>
 
                         <p className={'uppercase'}>
-                            {/*{SAMPLE_DATA.ROAST}*/}
-                            <Roast songs={songs}/>
+                            {SAMPLE_DATA.ROAST}
+                            {/*<Roast songs={songs}/>*/}
                         </p>
 
 
@@ -334,14 +342,7 @@ export default function RoastPage() {
 
                     </Receipt.Scaffold>
 
-                    <p className={'text-white text-center text-sm text-opacity-80 my-8'}>
-                        IF YOU LIKE THIS STUPID APP (OR MY AWESOME HUMOR), CONSIDER <a
-                        href={'https://ko-fi.com/nabilridhwan'}
-                        className={'underline'}>SUPPORTING ME!</a>
-                    </p>
-
-
-                    <div className={'text-white flex-col flex items-center gap-4'}>
+                    <div className={'mt-8 text-white flex-col flex items-center gap-4'}>
                         <button
                             onClick={handleDownloadImage}
                             className={'bg-white px-3 py-2 text-black rounded-xl'}
@@ -352,6 +353,12 @@ export default function RoastPage() {
                             (BECAUSE YOU GOTTA SOMEHOW GET VALIDATION FOR YOUR MUSIC, RIGHT?)
                         </p>
                     </div>
+
+                    <p className={'text-white text-center text-sm text-opacity-50 my-8'}>
+                        IF YOU LIKE THIS STUPID APP (OR MY AWESOME HUMOR), CONSIDER <a
+                        href={'https://ko-fi.com/nabilridhwan'}
+                        className={'underline'}>SUPPORTING ME!</a>
+                    </p>
 
 
                 </div>
