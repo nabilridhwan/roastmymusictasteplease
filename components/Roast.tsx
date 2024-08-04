@@ -17,28 +17,6 @@ const promptTemplate = ChatPromptTemplate.fromMessages([
 ]);
 const parser = new StringOutputParser();
 
-async function fetchSpotifyTopSongs(accessToken: string): Promise<Song[]> {
-    const res = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=short_term', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        }
-    })
-
-    const data = await res.json()
-
-    if (!data.items) {
-        return []
-    }
-
-    return data.items.map((item: any) => {
-        return {
-            name: item.name,
-            artist: item.artists.map((artist: any) => artist.name).join(", "),
-            duration_ms: item.duration_ms
-        }
-    })
-}
-
 export async function generateRoast(songsData: Song[]) {
     const chain = promptTemplate.pipe(model).pipe(parser);
 
@@ -49,13 +27,8 @@ export async function generateRoast(songsData: Song[]) {
     return await chain.invoke({songs: parsedAsString})
 }
 
-
-export default async function Roast({spotifyAccessToken}: { spotifyAccessToken: string }) {
-    const songs = await fetchSpotifyTopSongs(spotifyAccessToken)
+export default async function Roast({songs}: { songs: Song[] }) {
     const roast = await generateRoast(songs)
-
-    console.log(JSON.stringify(songs))
-    console.log(roast)
 
     if (!songs) {
         return <p>

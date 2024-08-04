@@ -163,6 +163,21 @@ export default function RoastPage() {
         return <CustomLoader text={"Hold on! We're making this worthwhile."}/>
     }
 
+    if (!songs) {
+        return (
+            <div className={'container my-8 mx-auto'}>
+                <div className={'px-8 text-white flex flex-col items-center text-center my-40 gap-8'}>
+                    <p className={'text-white'}>
+                        The gods of music have rejected your offering. There&apos;s nothing they can roast you about
+                        because you don&apos;t listen to any songs. Is your music taste that obscure? Do you hate music
+                        that much? <a
+                        href={"/"} className={'underline'}>Try again</a>
+                    </p>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className={'container my-8 mx-auto'}>
             <Suspense fallback={<CustomLoader
@@ -222,7 +237,7 @@ export default function RoastPage() {
 
                     <p className={'uppercase'}>
                         {/*{SAMPLE_DATA.ROAST}*/}
-                        <Roast spotifyAccessToken={accessToken}/>
+                        <Roast songs={songs}/>
                     </p>
 
 
