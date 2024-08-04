@@ -25,3 +25,10 @@ Fork this repo, create a PR and be descriptive about your changes. I will review
 - Spotify API
 - Node.js
 - Next.js (and thanks to SSR)
+
+## Special thanks
+
+- Receiptify (https://receiptify.herokuapp.com/) for the inspiration. Do check out their project as well because it is
+  much better than this project.
+- ChatGPT for helping me with this brutal humor (they're like my sidekick, helping me roast people better)
+- Friends, who have helped me test and gave feedback on this project, on what could be made better.
