@@ -3,43 +3,7 @@ import {Libre_Barcode_39} from "next/font/google";
 import {Receipt} from "@/components/Receipt";
 import {format} from "date-fns";
 import {ChangeEvent, ChangeEventHandler, FormEventHandler, useState} from "react";
-
-const STATE_KEY = 'spotify_auth_state';
-
-const generateRandomString = (length: number) => {
-    let text = '';
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    for (let i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-
-    return text;
-
-}
-
-const handleLoginWithSpotify = (type: 'recent' | 'top') => {
-    const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID!;
-    const redirect_uri = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URL!;
-
-    const state = generateRandomString(16);
-
-    localStorage.setItem(STATE_KEY, state);
-    const scope = 'user-read-private user-read-email user-top-read user-read-recently-played';
-
-    let url = new URL('https://accounts.spotify.com/authorize');
-    url.searchParams.set('response_type', 'token');
-    url.searchParams.set('client_id', encodeURIComponent(client_id));
-    url.searchParams.set('scope', encodeURIComponent(scope));
-    url.searchParams.set('redirect_uri', redirect_uri + `?type=${type}`);
-    url.searchParams.set('state', encodeURIComponent(state));
-
-    console.log(client_id)
-    console.log(url.toString())
-
-    //     Push the URL
-    window.location.replace(url)
-}
+import {handleLoginWithSpotify} from "@/lib/spotify";
 
 
 export default function Home() {

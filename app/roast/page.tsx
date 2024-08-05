@@ -6,142 +6,17 @@ import {SAMPLE_DATA} from "@/sample-data";
 import html2canvas from "html2canvas";
 import Roast from "@/components/Roast";
 import {format} from "date-fns";
-import {RingLoader} from "react-spinners";
-import domtoimage from 'dom-to-image'
 import {saveAs} from 'file-saver'
 import {useSearchParams} from "next/navigation";
-
-const STATE_KEY = 'spotify_auth_state';
-
-interface Song {
-    name: string;
-    artist: string;
-    duration_ms: number;
-}
-
-/**
- * Converts the hash in the URL into an object
- * Used for decoding the Spotify access token from implicit grant flow
- * @param hash
- */
-function parseHash(hash: string) {
-    return hash.split("&").map((item) => {
-        return {
-            [item.split("=")[0].replace("#", "")]: item.split("=")[1]
-        }
-    }).reduce((acc, item) => {
-            return {...acc, ...item}
-        }
-        , {})
-}
-
-/**
- * Convert milliseconds to minutes and seconds
- * https://stackoverflow.com/a/21294619
- * @param millis
- */
-function millisToMinutesAndSeconds(millis: number) {
-    let minutes = Math.floor(millis / 60000);
-    let seconds = ((millis % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (parseInt(seconds, 10) < 10 ? '0' : '') + seconds;
-}
-
-
-/**
- * Fetch the top songs from Spotify by user's token
- * @param accessToken
- */
-async function fetchSpotifyTopSongs(accessToken: string): Promise<Song[]> {
-    const res = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=short_term', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        }
-    })
-
-    const data = await res.json()
-
-    if (!data.items) {
-        return []
-    }
-
-    return data.items.map((item: any) => {
-        return {
-            name: item.name,
-            artist: item.artists.map((artist: any) => artist.name).join(", "),
-            duration_ms: item.duration_ms
-        }
-    })
-}
-
-/**
- * Fetch the recently played songs from Spotify by user's token
- * @param accessToken
- */
-async function fetchSpotifyRecentlyPlayedSongs(accessToken: string): Promise<Song[]> {
-    const res = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=10', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        }
-    })
-
-
-    const data = await res.json()
-
-    if (!data.items) {
-        return []
-    }
-
-    return data.items.map((item: any) => {
-        return {
-            name: item.track.name,
-            artist: item.track.artists.map((artist: any) => artist.name).join(", "),
-            duration_ms: item.track.duration_ms
-        }
-    })
-}
-
-/**
- * Fetch the Spotify profile by user's token
- * @param accessToken
- */
-async function fetchSpotifyProfile(accessToken: string) {
-    const res = await fetch('https://api.spotify.com/v1/me', {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        }
-    })
-
-    const data = await res.json()
-
-    if (!data) {
-        return null
-    }
-
-    return {
-        name: data.display_name,
-    }
-
-}
-
-const PLAYFUL_LINES = [
-    "I hope you get a paper cut on a lottery ticket.",
-    "I hope your favorite song gets stuck in your head forever.",
-    "I hope you accidentally bite into a raisin cookie thinking it's chocolate chip.",
-    "I hope you step on a Lego in the middle of the night.",
-    "I hope your ice cream melts before you finish it.",
-    "I hope you always get a slightly overripe banana.",
-    "I hope you get a small pebble in your shoe on a long walk.",
-    "I hope your favorite show gets cancelled on a cliffhanger.",
-    "I hope you always spill a little bit of your drink when you take the first sip.",
-    "I hope you always get the slowest cashier in the store."
-]
+import {fetchSpotifyProfile, fetchSpotifyRecentlyPlayedSongs, fetchSpotifyTopSongs} from "@/lib/spotify";
+import {getGreeting, millisToMinutesAndSeconds} from "@/lib/datetime";
+import {parseHash} from "@/lib/url";
+import Constant from "@/constants";
+import {Song} from "@/lib/roast";
 
 export default function RoastPage() {
 
     const searchParams = useSearchParams()
-
-    const type = searchParams.get('type') || 'top'
-    const orderType = type === 'top' ? '0001' : '0002'
 
     const [accessToken, setAccessToken] = useState("")
     const [hasSpotifyError, setHasSpotifyError] = useState(false)
@@ -150,20 +25,10 @@ export default function RoastPage() {
     const [displayName, setDisplayName] = useState("")
     const [isLoadingUserProfile, setIsLoadingUserProfile] = useState(true)
 
+
+    const type = searchParams.get('type') || 'top'
+    const orderType = type === 'top' ? '0001' : '0002'
     const isLoading = isLoadingSongs || isLoadingUserProfile
-
-    // Return 'DAY', 'EVENING', 'NIGHT' based on the current time
-    const getGreeting = () => {
-        const hour = new Date().getHours()
-
-        if (hour >= 0 && hour < 12) {
-            return 'DAY'
-        } else if (hour >= 12 && hour < 18) {
-            return 'EVENING'
-        } else {
-            return 'NIGHT'
-        }
-    }
 
 
     const handleFetchSpotifySongs = async (accessToken: string) => {
@@ -215,7 +80,7 @@ export default function RoastPage() {
         const hashObject = parseHash(hash)
 
         // Get the state from the local storage
-        const state = localStorage.getItem(STATE_KEY)
+        const state = localStorage.getItem(Constant.STATE_KEY)
 
         // Check if the state matches
 
@@ -233,6 +98,10 @@ export default function RoastPage() {
         setAccessToken(hashObject['access_token'])
     }, []);
 
+
+    /**
+     * Handle fetching songs and profile when access token is set
+     */
     useEffect(() => {
 
         if (!accessToken) return;
@@ -380,7 +249,7 @@ export default function RoastPage() {
                         <Receipt.Barcode text={'MADEBYNABIL'}/>
                         <p className={'uppercase'}>
                             HAVE A TERRIBLE {getGreeting()}!
-                            – {PLAYFUL_LINES[Math.floor(Math.random() * PLAYFUL_LINES.length)]}
+                            – {Constant.PLAYFUL_LINES[Math.floor(Math.random() * Constant.PLAYFUL_LINES.length)]}
                         </p>
 
                         <p className={'mt-4 text-xs leading-none'}>
