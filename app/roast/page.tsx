@@ -9,6 +9,7 @@ import {format} from "date-fns";
 import {RingLoader} from "react-spinners";
 import domtoimage from 'dom-to-image'
 import {saveAs} from 'file-saver'
+import {useSearchParams} from "next/navigation";
 
 const STATE_KEY = 'spotify_auth_state';
 
@@ -73,6 +74,33 @@ async function fetchSpotifyTopSongs(accessToken: string): Promise<Song[]> {
 }
 
 /**
+ * Fetch the recently played songs from Spotify by user's token
+ * @param accessToken
+ */
+async function fetchSpotifyRecentlyPlayedSongs(accessToken: string): Promise<Song[]> {
+    const res = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=10', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    })
+
+
+    const data = await res.json()
+
+    if (!data.items) {
+        return []
+    }
+
+    return data.items.map((item: any) => {
+        return {
+            name: item.track.name,
+            artist: item.track.artists.map((artist: any) => artist.name).join(", "),
+            duration_ms: item.track.duration_ms
+        }
+    })
+}
+
+/**
  * Fetch the Spotify profile by user's token
  * @param accessToken
  */
@@ -110,6 +138,11 @@ const PLAYFUL_LINES = [
 
 export default function RoastPage() {
 
+    const searchParams = useSearchParams()
+
+    const type = searchParams.get('type') || 'top'
+    const orderType = type === 'top' ? '0001' : '0002'
+
     const [accessToken, setAccessToken] = useState("")
     const [hasSpotifyError, setHasSpotifyError] = useState(false)
     const [songs, setSongs] = useState<Song[]>([])
@@ -133,7 +166,21 @@ export default function RoastPage() {
     }
 
 
-    const handleFetchSpotifyTopSongs = async (accessToken: string) => {
+    const handleFetchSpotifySongs = async (accessToken: string) => {
+
+        if (type === 'recent') {
+            fetchSpotifyRecentlyPlayedSongs(accessToken).then((songs) => {
+                setSongs(songs);
+            })
+                .catch(() => {
+                    setHasSpotifyError(true)
+                })
+                .finally(() => {
+                    setIsLoadingSongs(false)
+                })
+            return;
+        }
+
         fetchSpotifyTopSongs(accessToken).then((songs) => {
             setSongs(songs);
         })
@@ -190,7 +237,7 @@ export default function RoastPage() {
 
         if (!accessToken) return;
 
-        void handleFetchSpotifyTopSongs(accessToken)
+        void handleFetchSpotifySongs(accessToken)
         void handleFetchSpotifyProfile(accessToken)
     }, [accessToken]);
 
@@ -298,7 +345,7 @@ export default function RoastPage() {
 
                         <Receipt.LeftItems items={
                             [
-                                {label: 'ORDER', value: `#${new Date().getTime()}-0001`},
+                                {label: 'ORDER', value: `#${new Date().getTime()}-${orderType}`},
                                 {label: 'CUSTOMER', value: displayName || 'PATHETIC HUMAN'},
                                 {label: 'DATE', value: format(new Date(), 'yyyy-MM-dd')},
                                 {label: 'SERVED BY', value: 'THE GODS OF MUSIC'},
