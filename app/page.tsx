@@ -69,7 +69,7 @@ export default function Home() {
 
                 <Receipt.Divider text={'WARNING'}/>
 
-                <p className={'mt-3'}>
+                <p className={'mt-3 uppercase'}>
                     The Gods of Music have no mercy for you. Your music taste is tragic, your love life a
                     cringe-worthy
                     ballad, and your personality is that one track everyone skips. When they break the 4th wall,
@@ -86,7 +86,7 @@ export default function Home() {
                     DEAR GODS OF MUSIC, I WOULD LIKE TO SUBMIT MY:
                 </p>
 
-                <div className={'flex justify-center gap-2 my-2'}>
+                <div className={'flex justify-center gap-2 my-2 uppercase'}>
                     <div className={'space-x-2'}>
                         <input type={'radio'} name={'type'} value={"top"} checked={type === "top"}
                                onChange={handleTypeChange}/>
@@ -109,7 +109,7 @@ export default function Home() {
 
                 <Receipt.Divider text={'PLEDGE'}/>
 
-                <div className={'space-x-2'}>
+                <div className={'space-x-2 uppercase'}>
                     <input type={'checkbox'} onChange={(e) => {
                         setIsEnabled(e.target.checked)
                     }}/>
